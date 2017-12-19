@@ -1,5 +1,5 @@
-from showGo import ShowGo, plt
-from PlayGo import PlayGo
+from Go.showGo import ShowGo, plt
+from Go.PlayGo import PlayGo
 import numpy as np
 
 
