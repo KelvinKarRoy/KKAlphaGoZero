@@ -2,11 +2,11 @@
 2017年10月nature论文实现 基于TensorFlow<br>
 开工日期 2017年12月19日
 ## 项目结构
->Go 围棋相关类
->>PlayGo.py 围棋规则类
->>ShowGo.py 提供可视化
->model 网络结构类
->>resnet_model.py resNet
+>Go 围棋相关类<br>
+>>PlayGo.py 围棋规则类<br>
+>>ShowGo.py 提供可视化<br>
+>model 网络结构类<br>
+>>resnet_model.py resNet<br>
 
 ## 任务清单
 - [x] 围棋规则类（可以下）
