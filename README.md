@@ -2,7 +2,8 @@
 2017年10月nature论文实现 基于TensorFlow<br>
 开工日期 2017年12月19日
 ## 项目结构
-* PlayGo.py 围棋规则类<br>
+* PlayGo.py 围棋规则类
+  * Go
 * ShowGo.py 提供可视化
 
 ## 任务清单
