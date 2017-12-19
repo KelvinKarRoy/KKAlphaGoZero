@@ -18,7 +18,8 @@
 
 ## 参考资料
 ### AlphaGo
-* [AlphaGo Lee](http://blog.csdn.net/songrotek/article/details/51065143)
+* [AlphaGo Lee中文PPT](http://blog.csdn.net/songrotek/article/details/51065143)
+* [AlphaGo Zero原论文](https://deepmind.com/documents/119/agz_unformatted_nature.pdf)
 * [AlphaGo Zero中文详细解析](http://www.sohu.com/a/199892682_500659)
 * [Alpha Zero(2017年12月，本项目未采用)](https://arxiv.org/pdf/1712.01815.pdf)
 ### MCTS
