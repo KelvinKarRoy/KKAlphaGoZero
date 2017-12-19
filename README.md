@@ -19,6 +19,7 @@
 ## 参考资料
 ### AlphaGo
 * [AlphaGo Lee](http://blog.csdn.net/songrotek/article/details/51065143)
+* [AlphaGo Zero中文详细解析](http://www.sohu.com/a/199892682_500659)
 * [Alpha Zero(2017年12月，本项目未采用)](https://arxiv.org/pdf/1712.01815.pdf)
 ### MCTS
 * [蒙特卡洛搜索树](http://mcts.ai/)
