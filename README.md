@@ -20,6 +20,5 @@
 ### AlphaGo
 * [AlphaGo Lee](http://blog.csdn.net/songrotek/article/details/51065143)
 * [Alpha Zero(2017年12月，本项目未采用)](https://arxiv.org/pdf/1712.01815.pdf)
-* [Deep Mind官方教学](https://alphagoteach.deepmind.com/)
 ### MCTS
 * [蒙特卡洛搜索树](http://mcts.ai/)
