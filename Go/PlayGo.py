@@ -6,10 +6,10 @@ import numpy as np
 class PlayGo(object):
     __size = 19;  # 棋盘大小
     __context = np.zeros([__size, __size]);  # 棋盘内容
-    BLACK = 1;
-    WHITE = -1;
-    EMPTY = 0;
-
+    WHITE, EMPTY, BLACK, FILL, KO, UNKNOWN = range(-1, 5);
+    komi = 7.5; # 黑子让目
+    passes_white = 0; # pass次数
+    passes_black = 0;
     """
         构造函数
         psize: 棋盘绘制大小
@@ -187,13 +187,67 @@ class PlayGo(object):
         self.__context[x][y] = color;
         self.__history[color].append([x,y]);
 
+    def __pass(self,color):
+        self.__history[color].append([-1, -1]);
+        if color == self.WHITE:
+            self.passes_white = self.passes_white + 1;
+        else:
+            self.passes_black = self.passes_black + 1;
+
     """
         落子
         这里判断落子是否合法
     """
     def save_move(self,x,y,color):
+        # pass
+        if x == -1 and y == -1:
+            self.__pass(color);
+            return [x,y];
         # 是否合法
         if self.is_acceptable(x,y,color):
             self.__move(self,x,y,color);
+            return [x,y];
         else:
-            print("落子不合法");
+            print("落子不合法，自动视为pass");
+            self.__pass(color);
+            return [-1,-1];
+
+    """
+        判断是否为该颜色的眼
+    """
+    def is_eyeish(self, x, y, color):
+        """returns whether the position is empty and is surrounded by all stones of 'owner'
+        """
+        if self.__context[x, y] != self.EMPTY:
+            return False
+
+        for (nx, ny) in self.getNeighbor(x,y):
+            if self.__context[nx, ny] != color:
+                return False
+        return True
+
+    """
+        计算目数差（已让目）
+        为正黑旗赢
+    """
+    def score(self):
+        score_black = 0;
+        score_white = 0;
+        for x in self.__size:
+            for y in self.__size:
+                if self.__context == self.WHITE:
+                    score_white = score_white + 1;
+                elif self.__context == self.BLACK:
+                    score_black = score_black + 1;
+                else:
+                    if self.is_eyeish(x,y, self.BLACK):
+                        score_black = score_black + 1;
+                    elif self.is_eyeish(x,y, self.WHITE):
+                        score_white = score_white + 1;
+
+        score_white += self.komi; # 让目
+        score_white -= self.passes_white; # 减去pass的步骤
+        score_black -= self.passes_black;
+
+        return score_black - score_white;
+
