@@ -1,8 +1,5 @@
 import numpy as np
 
-
-
-
 class PlayGo(object):
     __size = 19;  # 棋盘大小
     __context = np.zeros([__size, __size]);  # 棋盘内容
