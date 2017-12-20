@@ -46,7 +46,7 @@ class AlphaGoZeroResNet(object):
         with tf.variable_scope(name):
             n = filter_size * filter_size * out_filters
             kernel = tf.get_variable(
-                'DW', [filter_size, filter_size, in_filters, out_filters],
+                name + 'DW', [filter_size, filter_size, in_filters, out_filters],
                 tf.float32, initializer=tf.random_normal_initializer(
                     stddev=np.sqrt(2.0 / n)))
             return tf.nn.conv2d(x, kernel, strides, padding='SAME')
@@ -63,13 +63,14 @@ class AlphaGoZeroResNet(object):
         这一层的参数维度即[x.get_shape()[1], out_dim]。初始化采用uniform。
     """
     def _fully_connected(self, x, out_dim, name=''):
-        x = tf.reshape(x, [self.hps.batch_size, -1])
-        w = tf.get_variable(
-            name+'DW', [x.get_shape()[1], out_dim],
-            initializer=tf.uniform_unit_scaling_initializer(factor=1.0))
-        b = tf.get_variable(name+'biases', [out_dim],
+        with tf.variable_scope(name):
+            x = tf.reshape(x, [self.hps.batch_size, -1])
+            w = tf.get_variable(
+                name+'DW', [x.get_shape()[1], out_dim],
+                initializer=tf.uniform_unit_scaling_initializer(factor=1.0))
+            b = tf.get_variable(name+'biases', [out_dim],
                             initializer=tf.constant_initializer())
-        return tf.nn.xw_plus_b(x, w, b)
+            return tf.nn.xw_plus_b(x, w, b)
 
     """
         Pooling层采用平均池化，直接使用了tf.nn.tf.nn.avg_pool。下面这个长得很像的并不是pool层，作用是统计每个feature的平均值。
@@ -200,8 +201,10 @@ class AlphaGoZeroResNet(object):
         tf.logging.info('image after unit %s', x.get_shape())
         return x
 
+    """
+        计算L2正则项
+    """
     def _decay(self):
-        """L2 weight decay loss."""
         costs = []
         for var in tf.trainable_variables():
             if var.op.name.find(r'DW') > 0:
