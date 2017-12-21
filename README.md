@@ -8,7 +8,8 @@
 >> TestGo.py 相关测试
 
 > model 网络结构类  
->> resnet_model.py resNet  
+>> resnet_model.py resNet的TensorFlow版本  
+>> alphago_zero_resnet_model.py alphaGo zero的model
 
 ## 任务清单
 - [x] 围棋规则类（可以下）
