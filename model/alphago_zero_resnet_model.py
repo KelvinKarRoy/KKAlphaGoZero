@@ -81,7 +81,9 @@ class AlphaGoZeroResNet(object):
         return tf.reduce_mean(x, [1, 2])
 
 
-    # TODO(xpan): Consider batch_norm in contrib/layers/python/layers/layers.py
+    """
+        BN层
+    """
     def _batch_norm(self, name, x):
         """Batch normalization."""
         with tf.variable_scope(name):
@@ -129,6 +131,9 @@ class AlphaGoZeroResNet(object):
             y.set_shape(x.get_shape())
             return y
 
+    """
+        残差运算层
+    """
     def _residual(self, x, in_filter, out_filter, stride,
                   activate_before_residual=False):
         """Residual unit with 2 sub layers."""

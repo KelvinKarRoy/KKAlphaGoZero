@@ -72,5 +72,26 @@ bb = playGo.is_acceptable(1,2,-1);
 """
 
 
+"""
+    测试走子
+    0 0 0 0     0 0 0 0    0 - 0 0    0 - 1 0   - - 1 0    0 0 1 0    0 0 1 0
+    0 0 0 0     0 1 0 0    0 1 0 0    0 1 0 0   0 1 0 0    1 1 0 0    1 1 0 0
+    0 0 0 0     0 0 0 0    0 0 0 0    0 0 0 0   0 0 0 0    0 0 0 0    0 0 0 0
+    0 0 0 0     0 0 0 0    0 0 0 0    0 0 0 0   0 0 0 0    0 0 0 0    0 0 0 0
+    最后一步白旗pass
+
+playGo = PlayGo(size=4);
+playGo.save_move(1,1,1);
+playGo.save_move(0,1,-1);
+playGo.save_move(0,2,1);
+playGo.save_move(0,0,-1);
+playGo.save_move(1,0,1);
+playGo.save_move(-1,-1,-1);
+x = playGo.get_last_context();
+a = playGo.process_input(1);
+playGo.save_move(1,2,1);
+playGo.save_move(2,2,-1);
+y = playGo.get_last_context();
+"""
 
 pass

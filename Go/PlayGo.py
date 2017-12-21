@@ -4,9 +4,11 @@ class PlayGo(object):
     __size = 19;  # 棋盘大小
     __context = np.zeros([__size, __size]);  # 棋盘内容
     WHITE, EMPTY, BLACK, FILL, KO, UNKNOWN = range(-1, 5);
-    komi = 7.5; # 黑子让目
-    passes_white = 0; # pass次数
-    passes_black = 0;
+    __komi = 7.5; # 黑子让目
+    __passes_white = 0; # pass次数
+    __passes_black = 0;
+    __num_history = 8;# 考虑的历史次数
+    __context_history = [np.zeros([__size, __size])];
     """
         构造函数
         psize: 棋盘绘制大小
@@ -18,6 +20,8 @@ class PlayGo(object):
         self.__size = size;
         self.__context = context;  # 棋盘内容
         self.__history = history;  # 黑子白子历史 若不下则为[-1,-1]
+        self.__context = np.zeros([size, size]);  # 棋盘内容
+        self.__context_history = [np.zeros([size, size])];
     """
         获取每个落子的连通所有点
         例如
@@ -183,13 +187,18 @@ class PlayGo(object):
             self.__context[cap[0]][cap[1]] = self.EMPTY;
         self.__context[x][y] = color;
         self.__history[color].append([x,y]);
+        self.__context_history.append(np.copy(self.__context));
 
+    """
+        pass 即不下棋
+    """
     def __pass(self,color):
         self.__history[color].append([-1, -1]);
+        self.__context_history.append(np.copy(self.__context_history[-1])); # 棋局不变
         if color == self.WHITE:
-            self.passes_white = self.passes_white + 1;
+            self.__passes_white = self.__passes_white + 1;
         else:
-            self.passes_black = self.passes_black + 1;
+            self.__passes_black = self.__passes_black + 1;
 
     """
         落子
@@ -202,7 +211,7 @@ class PlayGo(object):
             return [x,y];
         # 是否合法
         if self.is_acceptable(x,y,color):
-            self.__move(self,x,y,color);
+            self.__move(x,y,color);
             return [x,y];
         else:
             print("落子不合法，自动视为pass");
@@ -242,9 +251,45 @@ class PlayGo(object):
                     elif self.is_eyeish(x,y, self.WHITE):
                         score_white = score_white + 1;
 
-        score_white += self.komi; # 让目
-        score_white -= self.passes_white; # 减去pass的步骤
-        score_black -= self.passes_black;
+        score_white += self.__komi; # 让目
+        score_white -= self.__passes_white; # 减去pass的步骤
+        score_black -= self.__passes_black;
 
         return score_black - score_white;
+
+    """
+            获取最后几步
+        """
+
+    def get_last_context(self):
+        num_histroy = len(self.__context_history)
+        if num_histroy < self.__num_history:
+            last_context = (self.__num_history - num_histroy) * [np.zeros([self.__size, self.__size])];
+            for his in self.__context_history:
+                last_context.append(his.copy());
+        else:
+            last_context = self.__context_history[num_histroy - self.__num_history: num_histroy].copy();
+        return last_context;
+
+
+    """
+        输入初始化
+    """
+    def process_input(self, color):
+        x = [];
+        last_context = self.get_last_context();
+        # 输入格式为 [batch, in_height, in_width, in_channels] 不要batch 即后面三项
+        for lc in last_context:
+            x.append ((lc == self.BLACK) * 1);
+        for lc in last_context:
+            x.append((lc == self.WHITE) * 1);
+        if color == self.WHITE:
+            x.append(np.zeros([self.__size,self.__size]));
+        else:
+            x.append(np.ones([self.__size,self.__size]));
+
+        x = np.transpose(x, ( 1, 2, 0));
+        return x;
+
+
 
