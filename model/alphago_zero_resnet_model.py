@@ -3,6 +3,8 @@ from collections import namedtuple
 import numpy as np
 import tensorflow as tf
 
+import Go.PlayGo
+
 from tensorflow.python.training import moving_averages
 
 HParams = namedtuple('HParams',
@@ -13,6 +15,9 @@ HParams = namedtuple('HParams',
 
 class AlphaGoZeroResNet(object):
     """ResNet model."""
+
+
+
 
     def __init__(self, hps, images, labels,mode):
         """ResNet constructor.
@@ -75,6 +80,7 @@ class AlphaGoZeroResNet(object):
     """
         Pooling层采用平均池化，直接使用了tf.nn.tf.nn.avg_pool。下面这个长得很像的并不是pool层，作用是统计每个feature的平均值。
         使用reduce_mean函数对x的第二、三维度（即对每一个feature，X的维度是[batch, in_height, in_width, in_channels]）。
+        最终维度是[batch, in_channels]
     """
     def _global_avg_pool(self, x):
         assert x.get_shape().ndims == 4
@@ -132,7 +138,21 @@ class AlphaGoZeroResNet(object):
             return y
 
     """
-        残差运算层
+        残差运算单元（2层conv为一个单元）
+        分为两种 用参数activate_before_residual控制
+        当activate_before_residual为True时：
+             x->BN层->ReLu层->conv->BN层->ReLu层->conv
+                           ↓                     ↓
+                            ->pool->pad-------->add-------->输出
+                            (如果上下的filter数目不相等才进行pad)
+        此结构下面用TR表示
+        False时：
+             x->BN层->ReLu层->conv->BN层->ReLu层->conv
+             ↓                                   ↓
+              ->pool->pad----------------------->add-------->输出
+              (如果上下的filter数目不相等才进行pad)
+        此结构下面用FR表示
+        默认是FR        
     """
     def _residual(self, x, in_filter, out_filter, stride,
                   activate_before_residual=False):
@@ -168,6 +188,24 @@ class AlphaGoZeroResNet(object):
         tf.logging.info('image after unit %s', x.get_shape())
         return x
 
+
+    """
+       残差运算单元（3层conv为一个单元）
+        分为两种 用参数activate_before_residual控制
+        当activate_before_residual为True时：
+             x->BN层->ReLu层->conv->BN层->ReLu层->conv->BN->ReLu->conv
+                           ↓                                    ↓
+                            ->pool->conv------------------------->add-------->输出
+                            (如果In和Out的filter数目不相等才进行conv)
+        此结构下面用TBR表示
+        False时：
+             x->BN层->ReLu层->conv->BN层->ReLu层->conv->BN->ReLu->conv
+             ↓                                                   ↓
+              ->pool->conv--------------------------------------->add-------->输出
+              (如果In和Out的filter数目不相等才进行conv)
+        此结构下面用FR表示
+        默认是FBR     
+    """
     def _bottleneck_residual(self, x, in_filter, out_filter, stride,
                              activate_before_residual=False):
         """Bottleneck resisual unit with 3 sub layers."""
@@ -217,3 +255,124 @@ class AlphaGoZeroResNet(object):
                 # tf.histogram_summary(var.op.name, var)
 
         return tf.multiply(self.hps.weight_decay_rate, tf.add_n(costs))
+
+    def _stride_arr(self, stride):
+        """Map a stride scalar to the stride array for tf.nn.conv2d."""
+        return [1, stride, stride, 1]
+
+    """
+        搭建model
+        首先self._images作为输入 维度是[filter_size, filter_size, in_filters, out_filters]。
+        self.hps.use_bottleneck代表用上述两层还是三层的残差单元(True为三层)
+        x -> init conv -> 3 * (TR -> (n-1)*FR) -> BN -> ReLu -> global_pool -> FC -> softmax
+                        或3 * (TBR-> (n-1)*FBR)
+        n为self.hps.num_residual_units，即每个大单元多少小单元
+        m为self.hps.num_classes，即FC层输出
+        需要说明的是global_pool是将每个feature单独直接取平均，即变成feature数目个数。
+    """
+    def _build_model(self,playGo):
+        """Build the core model within the graph."""
+        with tf.variable_scope('init'):
+            x = self._images
+            """
+            卷积核大小为3 
+            输入有（2*历史数+1）个通道 如论文里面考虑前8次信息 则17通道
+            输出神经元16个 即16个通道
+          """
+            x = self._conv('init_conv', x, 3, 2 * playGo.get_num_history()+1, 16, self._stride_arr(1))
+
+        # 步长 三个大单元的第一个小单元的步长 后n-1个小单元步长均为1
+        strides = [1, 2, 2]
+        # 三个大单元的第一个小单元是 T(B)R还是F(B)R
+        activate_before_residual = [True, False, False]
+        if self.hps.use_bottleneck:
+            res_func = self._bottleneck_residual
+            filters = [16, 64, 128, 256]
+        else:
+            res_func = self._residual
+            filters = [16, 16, 32, 64]
+            # Uncomment the following codes to use w28-10 wide residual network.
+            # It is more memory efficient than very deep residual network and has
+            # comparably good performance.
+            # https://arxiv.org/pdf/1605.07146v1.pdf
+            # filters = [16, 160, 320, 640]
+            # Update hps.num_residual_units to 9
+
+        with tf.variable_scope('unit_1_0'):
+            x = res_func(x, filters[0], filters[1],
+                         self._stride_arr(strides[0]),
+                         activate_before_residual[0])
+        for i in range(1, self.hps.num_residual_units):
+            with tf.variable_scope('unit_1_%d' % i):
+                x = res_func(x, filters[1], filters[1], self._stride_arr(1),
+                             False)
+
+        with tf.variable_scope('unit_2_0'):
+            x = res_func(x, filters[1], filters[2],
+                         self._stride_arr(strides[1]),
+                         activate_before_residual[1])
+        for i in range(1, self.hps.num_residual_units):
+            with tf.variable_scope('unit_2_%d' % i):
+                x = res_func(x, filters[2], filters[2], self._stride_arr(1),
+                             False)
+
+        with tf.variable_scope('unit_3_0'):
+            x = res_func(x, filters[2], filters[3],
+                         self._stride_arr(strides[2]),
+                         activate_before_residual[2])
+        for i in range(1, self.hps.num_residual_units):
+            with tf.variable_scope('unit_3_%d' % i):
+                x = res_func(x, filters[3], filters[3], self._stride_arr(1),
+                             False)
+
+        with tf.variable_scope('unit_last'):
+            x = self._batch_norm('final_bn', x)
+            x = self._relu(x, self.hps.relu_leakiness)
+            x = self._global_avg_pool(x)
+
+        with tf.variable_scope('logit'):
+            logits = self._fully_connected(x, self.hps.num_classes)
+            self.predictions = tf.nn.softmax(logits)
+
+        # TODO 计算loss 可以开始改了
+        with tf.variable_scope('costs'):
+            xent = tf.nn.sparse_softmax_cross_entropy_with_logits(
+                logits=logits, labels=self.labels)
+            self.cost = tf.reduce_mean(xent, name='xent')
+            self.cost += self._decay()
+
+            tf.summary.scalar('cost', self.cost)
+
+        # TODO 计算准确率
+        with tf.variable_scope('acc'):
+            correct_prediction = tf.equal(
+                tf.cast(tf.argmax(logits, 1), tf.int32), self.labels)
+            self.acc = tf.reduce_mean(
+                tf.cast(correct_prediction, tf.float32), name='accu')
+
+            tf.summary.scalar('accuracy', self.acc)
+
+    """
+        训练操作
+        self.hps.lrn_rate 学习率
+        self.hps.optimizer 'sgd' SGD 和 'mom' Momentum
+    """
+    def _build_train_op(self):
+        """Build training specific ops for the graph."""
+        self.lrn_rate = tf.constant(self.hps.lrn_rate, tf.float32)
+        tf.summary.scalar('learning rate', self.lrn_rate)
+
+        trainable_variables = tf.trainable_variables()
+        grads = tf.gradients(self.cost, trainable_variables)
+
+        if self.hps.optimizer == 'sgd':
+            optimizer = tf.train.GradientDescentOptimizer(self.lrn_rate)
+        elif self.hps.optimizer == 'mom':
+            optimizer = tf.train.MomentumOptimizer(self.lrn_rate, 0.9)
+
+        apply_op = optimizer.apply_gradients(
+            zip(grads, trainable_variables),
+            global_step=self.global_step, name='train_step')
+
+        train_ops = [apply_op] + self._extra_train_ops
+        self.train_op = tf.group(*train_ops)

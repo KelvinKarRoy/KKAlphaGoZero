@@ -1,5 +1,6 @@
 import numpy as np
 
+
 class PlayGo(object):
     __size = 19;  # 棋盘大小
     __context = np.zeros([__size, __size]);  # 棋盘内容
@@ -15,13 +16,21 @@ class PlayGo(object):
         size: 棋盘大小
         context: 棋盘内容
     """
-
     def __init__(self, size=19, context= np.zeros([__size, __size]),history = {BLACK: [], WHITE: []}):
         self.__size = size;
         self.__context = context;  # 棋盘内容
         self.__history = history;  # 黑子白子历史 若不下则为[-1,-1]
         self.__context = np.zeros([size, size]);  # 棋盘内容
         self.__context_history = [np.zeros([size, size])];
+
+    """
+        getter & setter
+    """
+    def get_size(self):
+       return self.__size;
+    def get_num_history(self):
+        return self.__num_history;
+
     """
         获取每个落子的连通所有点
         例如
@@ -258,8 +267,8 @@ class PlayGo(object):
         return score_black - score_white;
 
     """
-            获取最后几步
-        """
+        获取最后几步
+    """
 
     def get_last_context(self):
         num_histroy = len(self.__context_history)
