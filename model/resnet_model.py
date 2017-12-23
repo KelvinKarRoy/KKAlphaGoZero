@@ -3,7 +3,7 @@ from collections import namedtuple
 import numpy as np
 import tensorflow as tf
 
-import Go.PlayGo
+import Go.playGo
 
 from tensorflow.python.training import moving_averages
 

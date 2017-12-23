@@ -2,26 +2,30 @@ import numpy as np
 
 
 class PlayGo(object):
-    __size = 19;  # 棋盘大小
-    __context = np.zeros([__size, __size]);  # 棋盘内容
+
     WHITE, EMPTY, BLACK, FILL, KO, UNKNOWN = range(-1, 5);
     __komi = 7.5; # 黑子让目
-    __passes_white = 0; # pass次数
-    __passes_black = 0;
     __num_history = 8;# 考虑的历史次数
-    __context_history = [np.zeros([__size, __size])];
     """
         构造函数
         psize: 棋盘绘制大小
         size: 棋盘大小
         context: 棋盘内容
     """
-    def __init__(self, size=19, context= np.zeros([__size, __size]),history = {BLACK: [], WHITE: []}):
+    def __init__(self, size=19, context= [],history = {BLACK: [], WHITE: []},passes_white = 0, passes_black = 0,context_history = []):
         self.__size = size;
-        self.__context = context;  # 棋盘内容
+        if context == []:
+            __context = np.zeros([size, size]);  # 棋盘内容
+        else:
+            self.__context = context;  # 棋盘内容
         self.__history = history;  # 黑子白子历史 若不下则为[-1,-1]
-        self.__context = np.zeros([size, size]);  # 棋盘内容
+        self.__passes_white = passes_white;  # pass次数
+        self.__passes_black = passes_black;
         self.__context_history = [np.zeros([size, size])];
+        if context_history == []:
+            self.__context_history = [np.zeros([size, size])];
+        else:
+            self.__context_history = context_history;
 
     """
         getter & setter
@@ -30,6 +34,8 @@ class PlayGo(object):
        return self.__size;
     def get_num_history(self):
         return self.__num_history;
+    def get_context_copy(self):
+        return  self.__context.copy();
 
     """
         获取每个落子的连通所有点
@@ -300,5 +306,24 @@ class PlayGo(object):
         x = np.transpose(x, ( 1, 2, 0));
         return x;
 
+    """
+        撤销一步
+    """
+    def undo(self):
+        if len(self.__context_history) > 1:
+            self.__context_history.pop();
+            self.__context = self.__context_history[-1];
+        else:
+            return ;
+        if len(self.__history[self.BLACK]) == len(self.__history[self.WHITE]):
+            # 相等则上一步走的是白旗
+            if self.__history[self.WHITE][-1][0] == -1 and self.__history[self.WHITE][-1][1] == -1:
+                self.__passes_white -= 1;
+            self.__history[self.WHITE].pop();
+        else:
+            if self.__history[self.BLACK][-1][0] == -1 and self.__history[self.BLACK][-1][1] == -1:
+                self.__passes_black -= 1;
+            self.__history[self.BLACK].pop();
 
-
+    def copy(self):
+        return PlayGo(self.__size,self.__context,self.__history,self.__passes_white,self.__passes_black,self.__context_history);
