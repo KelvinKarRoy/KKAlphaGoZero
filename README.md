@@ -21,6 +21,8 @@
 
 ## 网络结构
 ![输入层](https://github.com/KelvinKarRoy/KKAlphaGoZero/blob/master/img/%E8%BE%93%E5%85%A5%E5%B1%82.jpg)  
+![残差单元](https://github.com/KelvinKarRoy/KKAlphaGoZero/blob/master/img/%E6%AE%8B%E5%B7%AE%E5%8D%95%E5%85%83.jpg)  
+![输出层](https://github.com/KelvinKarRoy/KKAlphaGoZero/blob/master/img/%E8%BE%93%E5%87%BA%E5%B1%82.jpg)  
 
 ## 参考资料
 ### AlphaGo
