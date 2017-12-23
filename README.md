@@ -2,19 +2,20 @@
 2017年10月nature论文实现 基于TensorFlow<br>
 开工日期 2017年12月19日
 ## 项目结构
-> Go 围棋相关类  
->> PlayGo.py 围棋规则类  
->> ShowGo.py 提供可视化  
->> TestGo.py 相关测试
+* Go 围棋相关类  
+    * PlayGo.py -------- 围棋规则类  
+    * ShowGo.py -------- 提供可视化  
+    * TestGo.py -------- 相关测试  
 
-> model 网络结构类  
->> resnet_model.py resNet的TensorFlow版本  
->> alphago_zero_resnet_model.py alphaGo zero的model
+* model 网络结构类  
+    * resnet_model.py --------------- resNet的TensorFlow版本  
+    * alphago_zero_resnet_model.py -- alphaGo zero的model
 
 ## 任务清单
 - [x] 围棋规则类（可以下）
 - [x] 可视化类
-- [ ] resNet网络结构类（正向传播）
+- [x] resNet网络结构类（正向传播）
+- [ ] 自对弈
 - [ ] MCTS
 - [ ] 增强学习
 
@@ -29,6 +30,8 @@
 
 
 ## 更新日志
+#### 2017年12月22日
+  对model类注释完毕，并针对此项目进行了部分修改，主要是参数部分。
 #### 2017年12月21日
   对围棋类增加了针对AlphaGo Zero输入的格式化；对model类增加了注释。
 #### 2017年12月20日
