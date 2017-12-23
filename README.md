@@ -2,8 +2,8 @@
 2017年10月nature论文实现 基于TensorFlow<br>
 开工日期 2017年12月19日
 ## 项目结构
-* Go 围棋相关类  
-    * playGo.py -------- 围棋规则类  
+* Go 围棋相关类  
+    * playGo.py -------- 围棋规则类  
     * showGo.py -------- 提供可视化  
     * testGo.py -------- 相关测试  
 
@@ -11,8 +11,8 @@
     * resnet_model.py --------------- resNet的TensorFlow版本  
     * alphago_zero_resnet_model.py -- alphaGo zero的model  
 
-* mcts 蒙特卡洛搜索树类  
-    * mcts.py --------------- 蒙特卡洛搜索树  
+* mcts 蒙特卡洛搜索树类  
+    * mcts.py --------------- 蒙特卡洛搜索树  
     * node.py --------------- 树的节点  
     * edge.py --------------- 树的边  
 
