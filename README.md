@@ -9,8 +9,11 @@
 
 * model 网络结构类  
     * resnet_model.py --------------- resNet的TensorFlow版本  
-    * alphago_zero_resnet_model.py -- alphaGo zero的model
-
+    * alphago_zero_resnet_model.py -- alphaGo zero的model  
+    
+* img 项目相关图片
+    * net_model.jpg ------ AlphaGo Zero的结构图  
+     
 ## 任务清单
 - [x] 围棋规则类（可以下）
 - [x] 可视化类
