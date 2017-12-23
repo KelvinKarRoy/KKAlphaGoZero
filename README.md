@@ -19,11 +19,15 @@
 - [ ] MCTS
 - [ ] 增强学习
 
+## 网络结构
+![输入层](https://github.com/KelvinKarRoy/KKAlphaGoZero/blob/master/img/%E8%BE%93%E5%85%A5%E5%B1%82.jpg)  
+
 ## 参考资料
 ### AlphaGo
 * [AlphaGo Lee中文PPT](http://blog.csdn.net/songrotek/article/details/51065143)
 * [AlphaGo Zero原论文](https://deepmind.com/documents/119/agz_unformatted_nature.pdf)
 * [AlphaGo Zero中文详细解析](http://www.sohu.com/a/199892682_500659)
+* [知乎大神的AlphaGo Zero解析](https://www.zhihu.com/question/66861459/answer/246844524)
 * [Alpha Zero(2017年12月，本项目未采用)](https://arxiv.org/pdf/1712.01815.pdf)
 ### MCTS
 * [蒙特卡洛搜索树](http://mcts.ai/)
