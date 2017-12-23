@@ -287,7 +287,7 @@ class AlphaGoZeroResNet(object):
         activate_before_residual = [True, False, False]
         if self.hps.use_bottleneck:
             res_func = self._bottleneck_residual
-            filters = [16, 64, 128, 256]
+            filters = [16, 64, 128, 256] # 第一个是输入个数 小单元神经元个数
         else:
             res_func = self._residual
             filters = [16, 16, 32, 64]
