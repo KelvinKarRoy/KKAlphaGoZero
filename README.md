@@ -3,13 +3,18 @@
 开工日期 2017年12月19日
 ## 项目结构
 * Go 围棋相关类  
-    * PlayGo.py -------- 围棋规则类  
-    * ShowGo.py -------- 提供可视化  
-    * TestGo.py -------- 相关测试  
+    * playGo.py -------- 围棋规则类  
+    * showGo.py -------- 提供可视化  
+    * testGo.py -------- 相关测试  
 
 * model 网络结构类  
     * resnet_model.py --------------- resNet的TensorFlow版本  
     * alphago_zero_resnet_model.py -- alphaGo zero的model  
+
+* mcts 蒙特卡洛搜索树类  
+    * mcts.py --------------- 蒙特卡洛搜索树  
+    * node.py --------------- 树的节点  
+    * edge.py --------------- 树的边  
 
 * img 项目相关图片  
     * net_model.jpg ------ AlphaGo Zero的结构图  
@@ -18,8 +23,8 @@
 - [x] 围棋规则类（可以下）
 - [x] 可视化类
 - [x] resNet网络结构类（正向传播）
-- [ ] 自对弈
 - [ ] MCTS
+- [ ] 自对弈
 - [ ] 增强学习
 
 ## 网络结构
@@ -37,6 +42,8 @@
 
 
 ## 更新日志
+#### 2017年12月24日
+  晚上睡不着，起来写代码。完成了mcts相关类的结构设计。
 #### 2017年12月23日
   AlphaGo Zero的model写完了！忙网络的实验忙了一下午也没做完，做这个调节一下心情。
 #### 2017年12月22日
