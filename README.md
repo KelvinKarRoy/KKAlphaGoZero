@@ -12,9 +12,9 @@
     * alphago_zero_resnet_model.py -- alphaGo zero的model  
 
 * mcts 蒙特卡洛搜索树类  
-    * mcts.py --------------- 蒙特卡洛搜索树  
-    * node.py --------------- 树的节点  
-    * edge.py --------------- 树的边  
+    * mcts.py --------------- 蒙特卡洛搜索树  
+    * node.py --------------- 树的节点  
+    * edge.py --------------- 树的边  
 
 * img 项目相关图片  
     * net_model.jpg ------ AlphaGo Zero的结构图  
