@@ -1,5 +1,5 @@
-from Go.showGo import ShowGo, plt
-from Go.playGo import PlayGo
+from go.showGo import ShowGo, plt
+from go.playGo import PlayGo
 import numpy as np
 
 
@@ -24,6 +24,7 @@ showGo.show(context);
 
 """
     测试 PlayGo.GetNeighbor
+
 _context = [[0,0,1,0,-1],[0,0,1,1,0],[0,1,1,-1,0],[0,0,-1,-1,0],[0,0,0,0,0]];
 playGo = PlayGo(size=5,context=_context);
 a = playGo.getNeighbor(1,2);

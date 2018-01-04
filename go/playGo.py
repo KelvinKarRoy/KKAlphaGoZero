@@ -1,11 +1,11 @@
 import numpy as np
 
+from rule import Rule
 
-class PlayGo(object):
+class PlayGo(Rule):
 
     WHITE, EMPTY, BLACK, FILL, KO, UNKNOWN = range(-1, 5);
     __komi = 7.5; # 黑子让目
-    __num_history = 8;# 考虑的历史次数
     """
         构造函数
         psize: 棋盘绘制大小
@@ -13,29 +13,29 @@ class PlayGo(object):
         context: 棋盘内容
     """
     def __init__(self, size=19, context= [],history = {BLACK: [], WHITE: []},passes_white = 0, passes_black = 0,context_history = []):
-        self.__size = size;
+        self._size = size;
         if context == []:
-            __context = np.zeros([size, size]);  # 棋盘内容
+            _context = np.zeros([size, size]);  # 棋盘内容
         else:
-            self.__context = context;  # 棋盘内容
-        self.__history = history;  # 黑子白子历史 若不下则为[-1,-1]
-        self.__passes_white = passes_white;  # pass次数
-        self.__passes_black = passes_black;
-        self.__context_history = [np.zeros([size, size])];
+            self._context = context;  # 棋盘内容
+        self._history = history;  # 黑子白子历史 若不下则为[-1,-1]
+        self._passes_white = passes_white;  # pass次数
+        self._passes_black = passes_black;
+        self._context_history = [np.zeros([size, size])];
         if context_history == []:
-            self.__context_history = [np.zeros([size, size])];
+            self._context_history = [np.zeros([size, size])];
         else:
-            self.__context_history = context_history;
+            self._context_history = context_history;
 
     """
         getter & setter
     """
     def get_size(self):
-       return self.__size;
+       return self._size;
     def get_num_history(self):
-        return self.__num_history;
+        return self._num_history;
     def get_context_copy(self):
-        return  self.__context.copy();
+        return  self._context.copy();
 
     """
         获取每个落子的连通所有点
@@ -49,24 +49,24 @@ class PlayGo(object):
         getNeighbor(2,3) --- [[2,3],[3,3],[3,2]]
     """
     def getNeighbor(self,x,y):
-        is_visited = np.zeros([self.__size,self.__size]);
+        is_visited = np.zeros([self._size,self._size]);
         queue = [];# 空队列
         neighbor = [];
         queue.append([x,y]);
         neighbor.append([x,y]);
         is_visited[x][y] = 1;
-        color = self.__context[x][y];
-        while queue.__len__() !=0:
+        color = self._context[x][y];
+        while queue._len_() !=0:
             cur_point = queue.pop(0);
             # 如果上下左右颜色一致则入队
             cur_x = cur_point[0];
             cur_y = cur_point[1];
             visited_change = [[-1,0],[1,0],[0,-1],[0,1]];
             for vc in visited_change:
-                if  cur_x+vc[0]>=0 and cur_x+vc[0]<self.__size\
-                    and cur_y+vc[1] >= 0 and cur_y+vc[1] < self.__size\
+                if  cur_x+vc[0]>=0 and cur_x+vc[0]<self._size\
+                    and cur_y+vc[1] >= 0 and cur_y+vc[1] < self._size\
                     and is_visited[cur_x+vc[0]][cur_y+vc[1]] == 0\
-                    and self.__context[cur_x+vc[0]][cur_y+vc[1]] == color:
+                    and self._context[cur_x+vc[0]][cur_y+vc[1]] == color:
                     queue.append([cur_x+vc[0],cur_y+vc[1]]);
                     neighbor.append([cur_x+vc[0],cur_y+vc[1]]);
                     is_visited[cur_x+vc[0]][cur_y+vc[1]] = 1;
@@ -88,16 +88,16 @@ class PlayGo(object):
          2 3 2 2 2
     """
     def getKyu(self):
-        kyu = np.zeros([self.__size,self.__size]); # 气初始化为0
-        for x in range(self.__size):
-            for y in range(self.__size):
-                if self.__context[x][y] == self.EMPTY :
+        kyu = np.zeros([self._size,self._size]); # 气初始化为0
+        for x in range(self._size):
+            for y in range(self._size):
+                if self._context[x][y] == self.EMPTY :
                     # 若是一个为空 给周围不为空的邻居都加一 给周围空加一
                     visited_change = [[-1, 0], [1, 0], [0, -1], [0, 1]];
                     for vc in visited_change:
-                        if x+vc[0] < 0 or x+vc[0] >= self.__size or y+vc[1] < 0 or y+vc[1] >= self.__size:
+                        if x+vc[0] < 0 or x+vc[0] >= self._size or y+vc[1] < 0 or y+vc[1] >= self._size:
                             continue;
-                        if self.__context[x+vc[0]][y+vc[1]] == self.EMPTY:
+                        if self._context[x+vc[0]][y+vc[1]] == self.EMPTY:
                             kyu[x+vc[0]][y+vc[1]] = kyu[x+vc[0]][y+vc[1]] + 1;
                         else:
                             neighbor = self.getNeighbor(x+vc[0],y+vc[1]);
@@ -121,15 +121,15 @@ class PlayGo(object):
     """
     def getCapture(self,x,y,color):
         capture = [];
-        if self.__context[x][y] != self.EMPTY:
+        if self._context[x][y] != self.EMPTY:
             return capture;
-        self.__context[x][y] = color;
+        self._context[x][y] = color;
         kyu = self.getKyu();
-        for _x in range(self.__size):
-            for _y in range(self.__size):
-                if kyu[_x][_y] == 0 and self.__context[_x][_y] == -1*color:
+        for _x in range(self._size):
+            for _y in range(self._size):
+                if kyu[_x][_y] == 0 and self._context[_x][_y] == -1*color:
                     capture.append([_x,_y]);
-        self.__context[x][y] = self.EMPTY;# 引用类型 所以还原
+        self._context[x][y] = self.EMPTY;# 引用类型 所以还原
         return capture;
 
 
@@ -141,12 +141,12 @@ class PlayGo(object):
         is_acceptable = False;
         # 循环打劫需要去掉 上次走过的子不能走
         last_step = [-1, -1];
-        if self.__history[color] != []:
-            last_step = self.__history[color][-1];
-        if self.__context[x][y] == self.EMPTY:
-            self.__context[x][y] = color;
+        if self._history[color] != []:
+            last_step = self._history[color][-1];
+        if self._context[x][y] == self.EMPTY:
+            self._context[x][y] = color;
             kyu = self.getKyu();
-            self.__context[x][y] = self.EMPTY;
+            self._context[x][y] = self.EMPTY;
             if kyu[x][y] > 0 and (x != last_step[0] or y != last_step[1]):
                 is_acceptable = True;
             else:
@@ -183,8 +183,8 @@ class PlayGo(object):
     """
     def getAcceptable(self,color):
         acceptable = [];
-        for x in range(self.__size):
-            for y  in range(self.__size):
+        for x in range(self._size):
+            for y  in range(self._size):
                 if self.is_acceptable(x,y,color) == True :
                     acceptable.append([x,y]);
         return acceptable;
@@ -195,25 +195,25 @@ class PlayGo(object):
         落子
         这里不做能不能落子的检测 
     """
-    def __move(self,x,y,color):
+    def _move(self,x,y,color):
         # 提子
         capture = self.getCapture(x,y,color);
         for cap in capture:
-            self.__context[cap[0]][cap[1]] = self.EMPTY;
-        self.__context[x][y] = color;
-        self.__history[color].append([x,y]);
-        self.__context_history.append(np.copy(self.__context));
+            self._context[cap[0]][cap[1]] = self.EMPTY;
+        self._context[x][y] = color;
+        self._history[color].append([x,y]);
+        self._context_history.append(np.copy(self._context));
 
     """
         pass 即不下棋
     """
-    def __pass(self,color):
-        self.__history[color].append([-1, -1]);
-        self.__context_history.append(np.copy(self.__context_history[-1])); # 棋局不变
+    def _pass(self,color):
+        self._history[color].append([-1, -1]);
+        self._context_history.append(np.copy(self._context_history[-1])); # 棋局不变
         if color == self.WHITE:
-            self.__passes_white = self.__passes_white + 1;
+            self._passes_white = self._passes_white + 1;
         else:
-            self.__passes_black = self.__passes_black + 1;
+            self._passes_black = self._passes_black + 1;
 
     """
         落子
@@ -222,15 +222,15 @@ class PlayGo(object):
     def save_move(self,x,y,color):
         # pass
         if x == -1 and y == -1:
-            self.__pass(color);
+            self._pass(color);
             return [x,y];
         # 是否合法
         if self.is_acceptable(x,y,color):
-            self.__move(x,y,color);
+            self._move(x,y,color);
             return [x,y];
         else:
             print("落子不合法，自动视为pass");
-            self.__pass(color);
+            self._pass(color);
             return [-1,-1];
 
     """
@@ -239,11 +239,11 @@ class PlayGo(object):
     def is_eyeish(self, x, y, color):
         """returns whether the position is empty and is surrounded by all stones of 'owner'
         """
-        if self.__context[x, y] != self.EMPTY:
+        if self._context[x, y] != self.EMPTY:
             return False
 
         for (nx, ny) in self.getNeighbor(x,y):
-            if self.__context[nx, ny] != color:
+            if self._context[nx, ny] != color:
                 return False
         return True
 
@@ -254,11 +254,11 @@ class PlayGo(object):
     def score(self):
         score_black = 0;
         score_white = 0;
-        for x in self.__size:
-            for y in self.__size:
-                if self.__context == self.WHITE:
+        for x in self._size:
+            for y in self._size:
+                if self._context == self.WHITE:
                     score_white = score_white + 1;
-                elif self.__context == self.BLACK:
+                elif self._context == self.BLACK:
                     score_black = score_black + 1;
                 else:
                     if self.is_eyeish(x,y, self.BLACK):
@@ -267,23 +267,22 @@ class PlayGo(object):
                         score_white = score_white + 1;
 
         score_white += self.__komi; # 让目
-        score_white -= self.__passes_white; # 减去pass的步骤
-        score_black -= self.__passes_black;
+        score_white -= self._passes_white; # 减去pass的步骤
+        score_black -= self._passes_black;
 
         return score_black - score_white;
 
     """
         获取最后几步
     """
-
     def get_last_context(self):
-        num_histroy = len(self.__context_history)
-        if num_histroy < self.__num_history:
-            last_context = (self.__num_history - num_histroy) * [np.zeros([self.__size, self.__size])];
-            for his in self.__context_history:
+        num_histroy = len(self._context_history)
+        if num_histroy < self._num_history:
+            last_context = (self._num_history - num_histroy) * [np.zeros([self._size, self._size])];
+            for his in self._context_history:
                 last_context.append(his.copy());
         else:
-            last_context = self.__context_history[num_histroy - self.__num_history: num_histroy].copy();
+            last_context = self._context_history[num_histroy - self._num_history: num_histroy].copy();
         return last_context;
 
 
@@ -299,9 +298,9 @@ class PlayGo(object):
         for lc in last_context:
             x.append((lc == self.WHITE) * 1);
         if color == self.WHITE:
-            x.append(np.zeros([self.__size,self.__size]));
+            x.append(np.zeros([self._size,self._size]));
         else:
-            x.append(np.ones([self.__size,self.__size]));
+            x.append(np.ones([self._size,self._size]));
 
         x = np.transpose(x, ( 1, 2, 0));
         return x;
@@ -310,20 +309,46 @@ class PlayGo(object):
         撤销一步
     """
     def undo(self):
-        if len(self.__context_history) > 1:
-            self.__context_history.pop();
-            self.__context = self.__context_history[-1];
+        if len(self._context_history) > 1:
+            self._context_history.pop();
+            self._context = self._context_history[-1];
         else:
             return ;
-        if len(self.__history[self.BLACK]) == len(self.__history[self.WHITE]):
+        if len(self._history[self.BLACK]) == len(self._history[self.WHITE]):
             # 相等则上一步走的是白旗
-            if self.__history[self.WHITE][-1][0] == -1 and self.__history[self.WHITE][-1][1] == -1:
-                self.__passes_white -= 1;
-            self.__history[self.WHITE].pop();
+            if self._history[self.WHITE][-1][0] == -1 and self._history[self.WHITE][-1][1] == -1:
+                self._passes_white -= 1;
+            self._history[self.WHITE].pop();
         else:
-            if self.__history[self.BLACK][-1][0] == -1 and self.__history[self.BLACK][-1][1] == -1:
-                self.__passes_black -= 1;
-            self.__history[self.BLACK].pop();
+            if self._history[self.BLACK][-1][0] == -1 and self._history[self.BLACK][-1][1] == -1:
+                self._passes_black -= 1;
+            self._history[self.BLACK].pop();
 
     def copy(self):
-        return PlayGo(self.__size,self.__context,self.__history,self.__passes_white,self.__passes_black,self.__context_history);
+        return PlayGo(self._size,self._context,self._history,self._passes_white,self._passes_black,self._context_history);
+
+    """
+        判断是否结束
+    """
+    def is_over(self):
+        # 还没开始下
+        if np.size(self._history[self.BLACK]) == 0 or np.size(self._history[self.WHITE]) == 0:
+            return False;
+        # 双方pass了
+        if self._history[self.BLACK][-1][0] == -1 and self._history[self.WHITE][-1][0] == -1:
+            return True;
+        return False;
+
+    """
+           remove_all函数,初始化棋盘信息
+    """
+    def remove_all(self, context = []):
+        if context == []:
+            self._context = np.zeros(self._size, self._size);
+        else:
+            self._context = context;
+        self._history[self.WHITE] = [];
+        self._history[self.BLACK] = [];
+        self._passes_black = 0;
+        self._passes_white = 0;
+        self._context_history = [self._context];

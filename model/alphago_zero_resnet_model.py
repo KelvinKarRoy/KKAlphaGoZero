@@ -3,7 +3,7 @@ from collections import namedtuple
 import numpy as np
 import tensorflow as tf
 
-import Go.playGo
+import go.playGo
 
 from tensorflow.python.training import moving_averages
 
@@ -268,7 +268,7 @@ class AlphaGoZeroResNet(object):
             self.cost += self._decay(); # L2正则项
 
 
-            tf.summary.scalar('cost', self.cost)
+            tf.summary.scalar('cost', self.cost);
         """
         计算准确率
         with tf.variable_scope('acc'):
