@@ -1,7 +1,6 @@
 ﻿# KKAlphaGoZero
 2017年10月nature论文实现 基于TensorFlow  
 开工日期 2017年12月19日  
-test
 ## 项目结构
 * rule.py ---------- rule父类
 * go 围棋相关类  
