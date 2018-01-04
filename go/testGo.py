@@ -1,5 +1,6 @@
-from go.showGo import ShowGo, plt
-from go.playGo import PlayGo
+# -*- coding: utf-8 -*-
+from showGo import ShowGo, plt
+from playGo import PlayGo
 import numpy as np
 
 
@@ -10,7 +11,6 @@ import numpy as np
 
 """
     测试画图
-
 showGo = ShowGo();
 
 context = np.zeros([showGo.get_size(), showGo.get_size()])
@@ -19,7 +19,6 @@ context[12][10] = -1
 context[7][11] = 1
 
 showGo.show(context);
-
 """
 
 """

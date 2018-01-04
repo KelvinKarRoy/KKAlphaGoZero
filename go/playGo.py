@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import numpy as np
 
 from rule import Rule
@@ -56,7 +57,7 @@ class PlayGo(Rule):
         neighbor.append([x,y]);
         is_visited[x][y] = 1;
         color = self._context[x][y];
-        while queue._len_() !=0:
+        while np.size(queue) !=0:
             cur_point = queue.pop(0);
             # 如果上下左右颜色一致则入队
             cur_x = cur_point[0];

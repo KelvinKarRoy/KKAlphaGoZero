@@ -1,4 +1,5 @@
-import mcts.node;
+# -*- coding: utf-8 -*-
+import node;
 
 class Edge(object):
     def __init__(self,rule,_mcts,color,pnode,action):
