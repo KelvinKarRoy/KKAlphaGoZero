@@ -8,8 +8,8 @@
     * showGo.py -------- 提供可视化  
     * testGo.py -------- 相关测试  
 
-* gobang 五子棋相关类  
-    * gobang.py -------- 五子棋规则类  
+* gobang 五子棋相关类  
+    * gobang.py -------- 五子棋规则类  
 
 * model 网络结构类  
     * resnet_model.py --------------- resNet的TensorFlow版本  
