@@ -20,7 +20,7 @@ class AlphaGoZeroResNet(object):
 
 
 
-    def __init__(self, _input, mode,next_action=[],is_winner=1,lrn_rate = 0.03, \
+    def __init__(self, _input, mode,rule,num_filter=128,num_block=20,next_action=[],is_winner=1,lrn_rate = 0.03, \
                  optimizer = 'sgd',policy_rate=1,relu_leakiness=0.0,value_rate=1,weight_decay_rate=0.0005):
         """ResNet constructor.
 
@@ -37,7 +37,7 @@ class AlphaGoZeroResNet(object):
           is_winner: 胜1 负-1 和0 [batch_size, 1]
           mode: One of 'train' and 'eval' 'test'.
         """
-        self._batch_size = _input.get_shape()[0];
+        self._batch_size = _input.get_shape()[0].value;
         self._lrn_rate = lrn_rate;
         self._optimizer = optimizer;
         self._policy_rate = policy_rate;
@@ -49,6 +49,10 @@ class AlphaGoZeroResNet(object):
         self.mode = mode;
         self.is_winner = is_winner;
         self._extra_train_ops = [];
+
+
+        # 初始化网络
+        self._my_build_model(rule,num_filter,num_block);
 
     """
         其卷积层的定义。
@@ -69,7 +73,7 @@ class AlphaGoZeroResNet(object):
                 name + 'DW', [filter_size, filter_size, in_filters, out_filters],
                 tf.float32, initializer=tf.random_normal_initializer(
                     stddev=np.sqrt(2.0 / n)))
-            return tf.nn.conv2d(x, kernel, strides, padding='SAME')
+            return tf.nn.conv2d(x, kernel, strides, padding='SAME');
 
     """
         ReLu层比较简单，采用普通ReLu。若想改成Leaky ReLu，使用上面一段代码。
@@ -84,7 +88,7 @@ class AlphaGoZeroResNet(object):
     """
     def _fully_connected(self, x, out_dim, name=''):
         with tf.variable_scope(name):
-            x = tf.reshape(x, [self._batch_size, -1])
+            x = tf.reshape(x, [self._batch_size, -1]);
             w = tf.get_variable(
                 name+'DW', [x.get_shape()[1], out_dim],
                 initializer=tf.uniform_unit_scaling_initializer(factor=1.0))
@@ -135,13 +139,14 @@ class AlphaGoZeroResNet(object):
                     'moving_variance', params_shape, tf.float32,
                     initializer=tf.constant_initializer(1.0, tf.float32),
                     trainable=False)
-                tf.summary.histogram(mean.op.name, mean)
-                tf.summary.histogram(variance.op.name, variance)
+                tf.histogram_summary(mean.op.name, mean);
+                tf.histogram_summary(variance.op.name, variance);
+
             # elipson used to be 1e-5. Maybe 0.001 solves NaN problem in deeper net.
             y = tf.nn.batch_normalization(
-                x, mean, variance, beta, gamma, 0.001)
-            y.set_shape(x.get_shape())
-            return y
+                x, mean, variance, beta, gamma, 0.001);
+            y.set_shape(x.get_shape());
+            return y;
 
 
     """
@@ -255,7 +260,7 @@ class AlphaGoZeroResNet(object):
             x = self._conv('policy_conv',x,1,num_filter,2,self._stride_arr(1));
             x = self._batch_norm('policy_bn', x);
             x = self._relu(x, self._relu_leakiness);
-            x = self._fully_connected(x,rule.get_size() * rule.get_size() + 1,"policy_FC");
+            x = self._fully_connected(x,rule.get_size() * rule.get_size() + 1,name="policy_FC");
             x = tf.nn.softmax(x);
 
         # Value
@@ -270,7 +275,8 @@ class AlphaGoZeroResNet(object):
             y = tf.nn.tanh(y);
 
         # 计算loss
-        self.cacul_loss(rule,y,x);
+        if self.mode != 'eval':
+            self.cacul_loss(rule,y,x);
         self.policy = x;
         self.value = y;
 

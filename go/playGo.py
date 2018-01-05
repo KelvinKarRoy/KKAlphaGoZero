@@ -16,7 +16,7 @@ class PlayGo(Rule):
     def __init__(self, size=19, context= [],history = {BLACK: [], WHITE: []},passes_white = 0, passes_black = 0,context_history = []):
         self._size = size;
         if context == []:
-            _context = np.zeros([size, size]);  # 棋盘内容
+            self._context = np.zeros([size, size]);  # 棋盘内容
         else:
             self._context = context;  # 棋盘内容
         self._history = history;  # 黑子白子历史 若不下则为[-1,-1]
@@ -304,7 +304,7 @@ class PlayGo(Rule):
             x.append(np.ones([self._size,self._size]));
 
         x = np.transpose(x, ( 1, 2, 0));
-        return x;
+        return x.tolist();
 
     """
         撤销一步
