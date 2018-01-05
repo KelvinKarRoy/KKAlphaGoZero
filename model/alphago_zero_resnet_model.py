@@ -3,7 +3,7 @@ from collections import namedtuple
 import numpy as np
 import tensorflow as tf
 
-import go.playGo
+
 
 from tensorflow.python.training import moving_averages
 
@@ -24,7 +24,7 @@ class AlphaGoZeroResNet(object):
 
         Args:
           hps: Hyperparameters.
-          _imput: Batches of images. [batch_size, size, size, num_history * 2 + 1]
+          _input: Batches of images. [batch_size, size, size, num_history * 2 + 1]
           next_action: 下一步采取的行动. [batch_size, size * size + 1]
           is_winner: 胜1 负-1 和0 [batch_size, 1]
           mode: One of 'train' and 'eval'.
@@ -208,14 +208,14 @@ class AlphaGoZeroResNet(object):
 
     """
         搭建AlphaGo Zero的model
-        首先self._images作为输入 维度是[filter_size, filter_size, in_filters, out_filters]。
+        首先self._images作为输入 维度是[batch_size,filter_size, filter_size, chanels]。
         self.hps.use_bottleneck代表用上述两层还是三层的残差单元(True为三层)
         x -> conv -> BN -> ReLu -> 19或39*AR -> conv -> BN -> ReLu -> FC -> softmax (Policy output=size*size+1)
                                       ↓
                                        -> conv -> BN -> ReLu -> FC(output=256) ->ReLu -> FC(output=1) -> Tanh (Value)
         最后的卷积核为1*1
     """
-    def _my_build_model(self,playGo,num_filter=256,num_block=20):
+    def _my_build_model(self,rule,num_filter=256,num_block=20):
         """Build the core model within the graph."""
         with tf.variable_scope('init'):
             x = self._input;
@@ -224,7 +224,7 @@ class AlphaGoZeroResNet(object):
             输入有（2*历史数+1）个通道 如论文里面考虑前8次信息 则17通道
             输出神经元num_filter个 即num_filter个通道
           """
-            x = self._conv('init_conv', x, 3, 2 * playGo.get_num_history()+1, num_filter, self._stride_arr(1));
+            x = self._conv('init_conv', x, 3, 2 * rule.get_num_history()+1, num_filter, self._stride_arr(1));
             x = self._batch_norm("init_BN",x);
             x = self._relu(x);
 
@@ -241,7 +241,7 @@ class AlphaGoZeroResNet(object):
             x = self._conv('policy_conv',x,1,num_filter,2,self._stride_arr(1));
             x = self._batch_norm('policy_bn', x);
             x = self._relu(x, self.hps.relu_leakiness);
-            x = self._fully_connected(x,playGo.get_size() * playGo.get_size() + 1,"policy_FC");
+            x = self._fully_connected(x,rule.get_size() * rule.get_size() + 1,"policy_FC");
             x = tf.nn.softmax(x);
 
         # Value
@@ -255,28 +255,26 @@ class AlphaGoZeroResNet(object):
             y = self._fully_connected(y, 1, "value_FC2");
             y = tf.nn.tanh(y);
 
+        # 计算loss
+        self.cacul_loss(rule,y,x);
+        self.policy = x;
+        self.value = y;
 
 
-        # TODO 计算loss 以后加了MCTS 会改x这部分
+
+    """
+        计算loss
+    """
+    def cacul_loss(self,rule,v,p):
         with tf.variable_scope('costs'):
-            xent = tf.nn.sparse_softmax_cross_entropy_with_logits(
-                logits=x, labels=self.next_action);
-            self.cost = tf.multiply(self.hps.policy_rate, tf.reduce_mean(xent, name='xent'));
 
-            self.cost += tf.multiply(self.hps.value_rate, tf.square(y - self.is_winner));
+            # value部分
+            self.cost = tf.mul(self.hps.value_rate, tf.square(v - self.is_winner));
 
-            self.cost += self._decay(); # L2正则项
+            # policy部分
+            self.cost -= tf.mul(self.hps.policy_rate,tf.mul(tf.log(p), self.next_action));
 
+            # L2正则项
+            self.cost += self._decay();
 
             tf.summary.scalar('cost', self.cost);
-        """
-        计算准确率
-        with tf.variable_scope('acc'):
-            correct_prediction = tf.equal(
-                tf.cast(tf.argmax(logits, 1), tf.int32), self.labels)
-            self.acc = tf.reduce_mean(
-                tf.cast(correct_prediction, tf.float32), name='accu')
-
-            tf.summary.scalar('accuracy', self.acc)
-        """
-
