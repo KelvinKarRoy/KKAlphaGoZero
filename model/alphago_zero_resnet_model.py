@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from collections import namedtuple
 
 import numpy as np
@@ -19,22 +20,35 @@ class AlphaGoZeroResNet(object):
 
 
 
-    def __init__(self, hps, _input, next_action,is_winner ,mode):
+    def __init__(self, _input, mode,next_action=[],is_winner=1,lrn_rate = 0.03, \
+                 optimizer = 'sgd',policy_rate=1,relu_leakiness=0.0,value_rate=1,weight_decay_rate=0.0005):
         """ResNet constructor.
 
         Args:
-          hps: Hyperparameters.
+          _batch_size: 批次大小.
+          _lrn_rate： 学习率.
+          _optimizer: 优化方法 'sgd' 或 'mom'.
+          _policy_rate: 策略系数.
+          _relu_leakiness: relu的leaky值.
+          _value_rate: value系数.
+          _weight_decay_rate: 正则化系数.
           _input: Batches of images. [batch_size, size, size, num_history * 2 + 1]
           next_action: 下一步采取的行动. [batch_size, size * size + 1]
           is_winner: 胜1 负-1 和0 [batch_size, 1]
-          mode: One of 'train' and 'eval'.
+          mode: One of 'train' and 'eval' 'test'.
         """
-        self.hps = hps;
+        self._batch_size = _input.get_shape()[0];
+        self._lrn_rate = lrn_rate;
+        self._optimizer = optimizer;
+        self._policy_rate = policy_rate;
+        self._relu_leakiness = relu_leakiness;
+        self._value_rate = value_rate;
+        self._weight_decay_rate = weight_decay_rate;
         self._input = _input;
         self.next_action = next_action;
-        self.mode = mode
+        self.mode = mode;
         self.is_winner = is_winner;
-        self._extra_train_ops = []
+        self._extra_train_ops = [];
 
     """
         其卷积层的定义。
@@ -70,7 +84,7 @@ class AlphaGoZeroResNet(object):
     """
     def _fully_connected(self, x, out_dim, name=''):
         with tf.variable_scope(name):
-            x = tf.reshape(x, [self.hps.batch_size, -1])
+            x = tf.reshape(x, [self._batch_size, -1])
             w = tf.get_variable(
                 name+'DW', [x.get_shape()[1], out_dim],
                 initializer=tf.uniform_unit_scaling_initializer(factor=1.0))
@@ -140,7 +154,7 @@ class AlphaGoZeroResNet(object):
                 costs.append(tf.nn.l2_loss(var))
                 # tf.histogram_summary(var.op.name, var)
 
-        return tf.multiply(self.hps.weight_decay_rate, tf.add_n(costs))
+        return tf.multiply(self._weight_decay_rate, tf.add_n(costs))
 
     def _stride_arr(self, stride):
         """Map a stride scalar to the stride array for tf.nn.conv2d."""
@@ -148,20 +162,20 @@ class AlphaGoZeroResNet(object):
 
     """
         训练操作
-        self.hps.lrn_rate 学习率
-        self.hps.optimizer 'sgd' SGD 和 'mom' Momentum
+        self._lrn_rate 学习率
+        self._optimizer 'sgd' SGD 和 'mom' Momentum
     """
     def _build_train_op(self):
         """Build training specific ops for the graph."""
-        self.lrn_rate = tf.constant(self.hps.lrn_rate, tf.float32)
+        self.lrn_rate = tf.constant(self._lrn_rate, tf.float32)
         tf.summary.scalar('learning rate', self.lrn_rate)
 
         trainable_variables = tf.trainable_variables()
         grads = tf.gradients(self.cost, trainable_variables)
 
-        if self.hps.optimizer == 'sgd':
+        if self._optimizer == 'sgd':
             optimizer = tf.train.GradientDescentOptimizer(self.lrn_rate)
-        elif self.hps.optimizer == 'mom':
+        elif self._optimizer == 'mom':
             optimizer = tf.train.MomentumOptimizer(self.lrn_rate, 0.9)
 
         apply_op = optimizer.apply_gradients(
@@ -186,7 +200,7 @@ class AlphaGoZeroResNet(object):
         with tf.variable_scope('sub1'):
             x = self._conv('conv1', x, 3, in_filter, out_filter, stride);
             x = self._batch_norm('bn1',x);
-            x = self._relu(x, self.hps.relu_leakiness);
+            x = self._relu(x, self._relu_leakiness);
 
         with tf.variable_scope('sub2'):
             x = self._conv('conv2', x, 3, out_filter, out_filter, [1, 1, 1, 1]);
@@ -200,7 +214,7 @@ class AlphaGoZeroResNet(object):
                              [(out_filter - in_filter) // 2,
                               (out_filter - in_filter) // 2]])
             x += orig_x;
-            x = self._relu(x, self.hps.relu_leakiness);
+            x = self._relu(x, self._relu_leakiness);
 
         tf.logging.info('image after unit %s', x.get_shape())
         return x
@@ -209,7 +223,7 @@ class AlphaGoZeroResNet(object):
     """
         搭建AlphaGo Zero的model
         首先self._images作为输入 维度是[batch_size,filter_size, filter_size, chanels]。
-        self.hps.use_bottleneck代表用上述两层还是三层的残差单元(True为三层)
+        self._use_bottleneck代表用上述两层还是三层的残差单元(True为三层)
         x -> conv -> BN -> ReLu -> 19或39*AR -> conv -> BN -> ReLu -> FC -> softmax (Policy output=size*size+1)
                                       ↓
                                        -> conv -> BN -> ReLu -> FC(output=256) ->ReLu -> FC(output=1) -> Tanh (Value)
@@ -240,7 +254,7 @@ class AlphaGoZeroResNet(object):
             # 1*1小卷积 2个卷积核
             x = self._conv('policy_conv',x,1,num_filter,2,self._stride_arr(1));
             x = self._batch_norm('policy_bn', x);
-            x = self._relu(x, self.hps.relu_leakiness);
+            x = self._relu(x, self._relu_leakiness);
             x = self._fully_connected(x,rule.get_size() * rule.get_size() + 1,"policy_FC");
             x = tf.nn.softmax(x);
 
@@ -249,9 +263,9 @@ class AlphaGoZeroResNet(object):
             # 1*1小卷积 1个卷积核
             y = self._conv('value_conv',org_x,1,num_filter,1,self._stride_arr(1));
             y = self._batch_norm('value_bn', y);
-            y = self._relu(y, self.hps.relu_leakiness);
+            y = self._relu(y, self._relu_leakiness);
             y = self._fully_connected(y, 256, "value_FC1");
-            y = self._relu(y, self.hps.relu_leakiness);
+            y = self._relu(y, self._relu_leakiness);
             y = self._fully_connected(y, 1, "value_FC2");
             y = tf.nn.tanh(y);
 
@@ -269,10 +283,10 @@ class AlphaGoZeroResNet(object):
         with tf.variable_scope('costs'):
 
             # value部分
-            self.cost = tf.mul(self.hps.value_rate, tf.square(v - self.is_winner));
+            self.cost = tf.mul(self._value_rate, tf.square(v - self.is_winner));
 
             # policy部分
-            self.cost -= tf.mul(self.hps.policy_rate,tf.mul(tf.log(p), self.next_action));
+            self.cost -= tf.mul(self._policy_rate,tf.mul(tf.log(p), self.next_action));
 
             # L2正则项
             self.cost += self._decay();

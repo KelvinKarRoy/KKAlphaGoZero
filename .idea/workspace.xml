@@ -2,8 +2,10 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="4d9ca9ff-98eb-49b0-82c5-f2ee9d49761c" name="Default" comment="">
+      <change beforePath="" afterPath="$PROJECT_DIR$/model/test_model.py" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change beforePath="$PROJECT_DIR$/model/alphago_zero_resnet_model.py" afterPath="$PROJECT_DIR$/model/alphago_zero_resnet_model.py" />
+      <change beforePath="$PROJECT_DIR$/model/resnet_model.py" afterPath="$PROJECT_DIR$/model/resnet_model.py" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -17,7 +19,7 @@
       <file leaf-file-name="testGo.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/go/testGo.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1692">
+            <state relative-caret-position="1728">
               <caret line="96" column="4" lean-forward="false" selection-start-line="96" selection-start-column="4" selection-end-line="96" selection-end-column="4" />
               <folding>
                 <element signature="e#24#54#0" expanded="true" />
@@ -29,22 +31,22 @@
       <file leaf-file-name="alphago_zero_resnet_model.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/model/alphago_zero_resnet_model.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="186">
-              <caret line="270" column="21" lean-forward="true" selection-start-line="270" selection-start-column="21" selection-end-line="270" selection-end-column="21" />
+            <state relative-caret-position="18">
+              <caret line="23" column="0" lean-forward="true" selection-start-line="23" selection-start-column="0" selection-end-line="23" selection-end-column="0" />
               <folding>
-                <element signature="e#0#34#0" expanded="true" />
-                <element signature="e#2756#4876#0" expanded="false" />
-                <element signature="e#5264#5365#0" expanded="false" />
+                <element signature="e#24#58#0" expanded="true" />
+                <element signature="e#3392#5512#0" expanded="false" />
+                <element signature="e#5897#5998#0" expanded="false" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="Tkinter.py" pinned="false" current-in-tab="false">
-        <entry file="file:///usr/lib/python2.7/lib-tk/Tkinter.py">
+      <file leaf-file-name="test_model.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/model/test_model.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="738">
-              <caret line="41" column="0" lean-forward="false" selection-start-line="41" selection-start-column="0" selection-end-line="41" selection-end-column="0" />
+            <state relative-caret-position="54">
+              <caret line="3" column="0" lean-forward="false" selection-start-line="3" selection-start-column="0" selection-end-line="3" selection-end-column="0" />
               <folding />
             </state>
           </provider>
@@ -60,11 +62,23 @@
           </provider>
         </entry>
       </file>
+      <file leaf-file-name="resnet_model.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/model/resnet_model.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="97">
+              <caret line="28" column="40" lean-forward="false" selection-start-line="28" selection-start-column="36" selection-end-line="28" selection-end-column="40" />
+              <folding>
+                <element signature="e#24#58#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
       <file leaf-file-name="mcts.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/mcts/mcts.py">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="0">
-              <caret line="0" column="23" lean-forward="false" selection-start-line="0" selection-start-column="23" selection-end-line="0" selection-end-column="23" />
+              <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="23" />
               <folding>
                 <element signature="e#24#36#0" expanded="true" />
               </folding>
@@ -99,23 +113,13 @@
       <file leaf-file-name="playGo.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/go/playGo.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-555">
+            <state relative-caret-position="4860">
               <caret line="305" column="40" lean-forward="true" selection-start-line="305" selection-start-column="40" selection-end-line="305" selection-end-column="40" />
               <folding>
                 <element signature="e#24#42#0" expanded="true" />
                 <element signature="e#407#938#0" expanded="false" />
                 <element signature="e#1466#2440#0" expanded="false" />
               </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="rule.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/rule.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="0">
-              <caret line="0" column="23" lean-forward="false" selection-start-line="0" selection-start-column="23" selection-end-line="0" selection-end-column="23" />
-              <folding />
             </state>
           </provider>
         </entry>
@@ -154,8 +158,11 @@
       <find>__</find>
       <find>_komi</find>
       <find>play</find>
-      <find>playGo</find>
       <find>pylab</find>
+      <find>eval</find>
+      <find>playGo</find>
+      <find>optimizer</find>
+      <find>hps</find>
     </findStrings>
     <replaceStrings>
       <replace>_</replace>
@@ -174,7 +181,6 @@
         <option value="$PROJECT_DIR$/PlayGo.py" />
         <option value="$PROJECT_DIR$/Main.py" />
         <option value="$PROJECT_DIR$/Go/PlayGo.py" />
-        <option value="$PROJECT_DIR$/model/resnet_model.py" />
         <option value="$PROJECT_DIR$/Test.py" />
         <option value="$PROJECT_DIR$/mcts/mcts_edge.py" />
         <option value="$PROJECT_DIR$/mcts/mcts_node.py" />
@@ -189,15 +195,17 @@
         <option value="$PROJECT_DIR$/rule.py" />
         <option value="$PROJECT_DIR$/go/playGo.py" />
         <option value="$PROJECT_DIR$/go/testGo.py" />
+        <option value="$PROJECT_DIR$/model/resnet_model.py" />
+        <option value="$PROJECT_DIR$/model/test_model.py" />
         <option value="$PROJECT_DIR$/model/alphago_zero_resnet_model.py" />
       </list>
     </option>
   </component>
   <component name="ProjectFrameBounds" extendedState="6">
-    <option name="x" value="-10" />
-    <option name="y" value="36" />
-    <option name="width" value="701" />
-    <option name="height" value="546" />
+    <option name="x" value="323" />
+    <option name="y" value="31" />
+    <option name="width" value="699" />
+    <option name="height" value="538" />
   </component>
   <component name="ProjectInspectionProfilesVisibleTreeState">
     <entry key="Project Default">
@@ -421,18 +429,25 @@
       <option name="project" value="LOCAL" />
       <updated>1515060351265</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="修改loss函数">
+      <created>1515137643571</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1515137643571</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="-10" y="36" width="1297" height="676" extended-state="6" />
+    <frame x="65" y="-4" width="1295" height="668" extended-state="6" />
     <layout>
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.18602826" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
-      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.39298892" sideWeight="0.5816327" order="7" side_tool="true" content_ui="tabs" />
+      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.5546875" sideWeight="0.5840708" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3270142" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.23019432" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Python Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.39298892" sideWeight="0.41836736" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Python Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.27675277" sideWeight="0.4159292" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.67286247" sideWeight="0.49372056" order="3" side_tool="false" content_ui="tabs" />
@@ -451,8 +466,10 @@
     <option name="myLimit" value="2678400000" />
   </component>
   <component name="VcsManagerConfiguration">
+    <option name="CHECK_NEW_TODO" value="false" />
     <MESSAGE value="1.更改了结构，使其可以不仅仅运用在围棋上&#10;2.完成了mcts大体上的结构" />
-    <option name="LAST_COMMIT_MESSAGE" value="1.更改了结构，使其可以不仅仅运用在围棋上&#10;2.完成了mcts大体上的结构" />
+    <MESSAGE value="修改loss函数" />
+    <option name="LAST_COMMIT_MESSAGE" value="修改loss函数" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -472,15 +489,14 @@
     </watches-manager>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://C:/ProgramData/Anaconda3/Lib/site-packages/matplotlib/axes/_axes.py" />
     <entry file="file://$PROJECT_DIR$/model/alphago_zero_resnet_model.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="1691">
           <caret line="134" column="13" lean-forward="false" selection-start-line="134" selection-start-column="13" selection-end-line="134" selection-end-column="13" />
           <folding>
-            <element signature="e#0#34#0" expanded="true" />
-            <element signature="e#2756#4876#0" expanded="false" />
-            <element signature="e#5264#5365#0" expanded="false" />
+            <element signature="e#24#58#0" expanded="true" />
+            <element signature="e#3392#5512#0" expanded="false" />
+            <element signature="e#5897#5998#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -642,13 +658,6 @@
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/Test.py" />
-    <entry file="file://$PROJECT_DIR$/model/resnet_model.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="774">
-          <caret line="50" column="26" lean-forward="false" selection-start-line="50" selection-start-column="26" selection-end-line="50" selection-end-column="26" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file:///usr/local/lib/python2.7/dist-packages/tensorflow/__init__.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="324">
@@ -660,24 +669,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="19278">
           <caret line="1071" column="0" lean-forward="false" selection-start-line="1071" selection-start-column="0" selection-end-line="1071" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/mcts/edge.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="23" lean-forward="false" selection-start-line="0" selection-start-column="23" selection-end-line="0" selection-end-column="23" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/mcts/mcts.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="23" lean-forward="false" selection-start-line="0" selection-start-column="23" selection-end-line="0" selection-end-column="23" />
-          <folding>
-            <element signature="e#24#36#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -715,12 +706,32 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/go/testGo.py">
+    <entry file="file://$PROJECT_DIR$/mcts/mcts.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1692">
-          <caret line="96" column="4" lean-forward="false" selection-start-line="96" selection-start-column="4" selection-end-line="96" selection-end-column="4" />
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="23" />
           <folding>
-            <element signature="e#24#54#0" expanded="true" />
+            <element signature="e#24#36#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/mcts/edge.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="23" lean-forward="false" selection-start-line="0" selection-start-column="23" selection-end-line="0" selection-end-column="23" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/go/playGo.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="4860">
+          <caret line="305" column="40" lean-forward="true" selection-start-line="305" selection-start-column="40" selection-end-line="305" selection-end-column="40" />
+          <folding>
+            <element signature="e#24#42#0" expanded="true" />
+            <element signature="e#407#938#0" expanded="false" />
+            <element signature="e#1466#2440#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -735,26 +746,42 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/go/playGo.py">
+    <entry file="file://$PROJECT_DIR$/model/resnet_model.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-555">
-          <caret line="305" column="40" lean-forward="true" selection-start-line="305" selection-start-column="40" selection-end-line="305" selection-end-column="40" />
+        <state relative-caret-position="97">
+          <caret line="28" column="40" lean-forward="false" selection-start-line="28" selection-start-column="36" selection-end-line="28" selection-end-column="40" />
           <folding>
-            <element signature="e#24#42#0" expanded="true" />
-            <element signature="e#407#938#0" expanded="false" />
-            <element signature="e#1466#2440#0" expanded="false" />
+            <element signature="e#24#58#0" expanded="true" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/go/testGo.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1728">
+          <caret line="96" column="4" lean-forward="false" selection-start-line="96" selection-start-column="4" selection-end-line="96" selection-end-column="4" />
+          <folding>
+            <element signature="e#24#54#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/model/test_model.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="54">
+          <caret line="3" column="0" lean-forward="false" selection-start-line="3" selection-start-column="0" selection-end-line="3" selection-end-column="0" />
+          <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/model/alphago_zero_resnet_model.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="186">
-          <caret line="270" column="21" lean-forward="true" selection-start-line="270" selection-start-column="21" selection-end-line="270" selection-end-column="21" />
+        <state relative-caret-position="18">
+          <caret line="23" column="0" lean-forward="true" selection-start-line="23" selection-start-column="0" selection-end-line="23" selection-end-column="0" />
           <folding>
-            <element signature="e#0#34#0" expanded="true" />
-            <element signature="e#2756#4876#0" expanded="false" />
-            <element signature="e#5264#5365#0" expanded="false" />
+            <element signature="e#24#58#0" expanded="true" />
+            <element signature="e#3392#5512#0" expanded="false" />
+            <element signature="e#5897#5998#0" expanded="false" />
           </folding>
         </state>
       </provider>
