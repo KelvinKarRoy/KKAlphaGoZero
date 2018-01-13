@@ -1,7 +1,7 @@
-﻿# KKAlphaGoZero
+# KKAlphaGoZero
 2017年10月nature论文实现 基于TensorFlow  
 开工日期 2017年12月19日  
-写的很慢 忙考试 不定期更新  
+写的很慢，忙考试，不定期更新  
 ## 项目结构
 * rule.py ---------- rule父类  
 * utils.py --------- 通用工具类  
