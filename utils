@@ -1,0 +1,8 @@
+# -*- coding: utf-8 -*-
+
+class Utils(object):
+
+    # 获取狄利克雷分布中的一个数
+    def get_dirichlet(self,a):
+        # TODO
+        return 0;

@@ -22,6 +22,10 @@ class Node(object):
 
     def get_depth(self):
         return self.__depth;
+    def get_context(self):
+        return self.__context;
+    def get_edges(self):
+        return self.__edges;
 
     """扩展节点"""
 
@@ -78,3 +82,13 @@ class Node(object):
         else:
             return max_n_edge;
         return random.sample(max_n_edge, 1)[0];
+
+    """ 更新所有子节点的Pa """
+    def update_child_pa(self):
+        context = self.__context;
+        size = self.__mcts.get_rule().get_size();
+        pa = self.__mcts.model.get_p(context,self.__color);
+        if self.__edges != []:
+            for e in self.__edges:
+                action = e.get_action();
+                e.set_pa(pa[action[0] * size + action[1]]);
