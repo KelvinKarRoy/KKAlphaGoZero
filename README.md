@@ -16,6 +16,7 @@
 * model 网络结构类  
     * resnet_model.py --------------- resNet的TensorFlow版本  
     * alphago_zero_resnet_model.py -- alphaGo zero的model  
+    * test_model.py ----------------- model的测试
 
 * mcts 蒙特卡洛搜索树类  
     * mcts.py --------------- 蒙特卡洛搜索树  
